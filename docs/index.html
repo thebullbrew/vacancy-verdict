@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The Vacancy Verdict — Cut the Rent or Hold the Line?</title>
+<link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#0F0A07">
+<link rel="icon" href="icons/icon-32.png"><link rel="apple-touch-icon" href="icons/icon-180.png">
+<style>
+:root{--bg:#0F0A07;--surface:#1A120C;--text:#F2E9D8;--accent:#8E2432;--accent2:#C9973F;--muted:#D8C9A8;--line:#4A3520}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Georgia,serif;line-height:1.5}
+.wrap{max-width:1080px;margin:0 auto;padding:24px 18px 60px}
+.eyebrow{letter-spacing:.22em;text-transform:uppercase;color:var(--accent2);font-size:12px;text-align:center}
+h1{font-size:clamp(40px,6vw,70px);line-height:.95;text-align:center;margin:10px 0 8px}
+.sub{text-align:center;color:var(--muted);max-width:780px;margin:0 auto 22px;font-style:italic}
+.orn{text-align:center;color:var(--accent2);letter-spacing:.5em}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}@media(max-width:820px){.grid{grid-template-columns:1fr}}
+.card{background:linear-gradient(180deg,rgba(201,151,63,.14),transparent 42px),repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,.12) 4px),var(--surface);border:1px solid var(--line);padding:20px;border-radius:10px;box-shadow:0 10px 30px rgba(0,0,0,.35)}
+.card h2{margin:0 0 12px;font-size:21px;border-bottom:2px solid var(--accent);padding-bottom:8px;color:var(--text)}
+label{display:block;font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:12px 0 4px}
+input,select{width:100%;padding:10px;background:#0F0A07;border:1px solid var(--line);color:var(--text);font-size:16px;font-family:Georgia,serif;border-radius:4px}
+.hero{text-align:center;padding:26px;background:linear-gradient(180deg,rgba(142,36,50,.28),transparent 55%),var(--surface)}
+.seal{display:inline-block;border:3px solid var(--accent2);border-radius:50%;width:164px;height:164px;line-height:1.05;padding-top:48px;font-weight:bold;color:var(--accent2);transform:rotate(-6deg);font-size:19px;background:rgba(142,36,50,.22);padding-left:10px;padding-right:10px}
+.big{font-size:36px;font-weight:bold;margin-top:14px;line-height:1.15}.big b{color:var(--accent2)}
+table{width:100%;border-collapse:collapse;font-size:14px}td,th{border-bottom:1px solid #3a2a18;padding:8px;text-align:left}th{color:var(--accent2)}
+button{background:#2A1A10;color:var(--text);border:1px solid var(--accent2);padding:11px 16px;cursor:pointer;font-family:Georgia,serif;font-size:15px;border-radius:6px}
+button.gold{background:var(--accent);color:#fff;font-weight:bold;border-color:var(--accent2)}
+.bar{height:18px;background:#0d0906;border:1px solid var(--line);display:flex;overflow:hidden;border-radius:4px}.bar i{display:block;height:100%}
+.preset{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}.preset button{flex:1;min-width:140px}
+.small{font-size:13px;color:var(--muted)} .row{display:flex;justify-content:space-between;gap:12px;padding:7px 0;border-bottom:1px dotted #6b5230}
+.row b{color:var(--accent2);white-space:nowrap}
+textarea{width:100%;min-height:110px;background:#0F0A07;color:var(--text);border:1px solid var(--line);padding:10px;font-family:Georgia,serif;border-radius:4px}
+.hl{background:rgba(201,151,63,.14)}
+</style></head><body><div class="wrap">
+<div class="eyebrow">The Bull Brew Daily Tool · Port &amp; Cigar</div><h1>The Vacancy<br>Verdict</h1>
+<p class="sub">An empty unit bleeds every day — but a rent cut bleeds for the whole lease. This judge prices both bleeds honestly: days saved by cutting versus dollars surrendered for twelve months, so you cut once, on purpose, or hold with a clear head.</p>
+<div class="orn">✦ ✦ ✦</div>
+<div class="preset" id="presets"></div>
+<div class="grid">
+<div class="card"><h2>The Listing</h2>
+<label>Asking rent ($/mo)</label><input id="ask" type="number" value="3350">
+<label>Proposed cut rent ($/mo)</label><input id="cutRent" type="number" value="3150">
+<label>Lease term at either rent (months)</label><input id="term" type="number" value="12">
+<label>Days already vacant (sunk — shown, not counted)</label><input id="daysGone" type="number" value="45">
+<label>Extra vacant-only costs while empty ($/mo — utilities, lawn, etc.)</label><input id="vacantExtra" type="number" value="280">
+</div>
+<div class="card"><h2>The Fill Forecast</h2>
+<label>Expected extra days to fill AT asking rent</label><input id="daysAtAsk" type="number" value="35">
+<label>Expected extra days to fill AT cut rent</label><input id="daysAtCut" type="number" value="10">
+<label>Leasing / agent fee at asking (% of first year rent)</label><input id="feeAskPct" type="number" value="0" step="0.5">
+<label>Leasing / agent fee at cut (% of first year rent)</label><input id="feeCutPct" type="number" value="0" step="0.5">
+<label>One-off cost to re-list / re-shoot photos ($)</label><input id="relist" type="number" value="0">
+<p class="small">Be honest about the forecast. Photos, showing access, and response time move days more than $50 does. If a cut will not actually move the fill date, this tool will tell you not to make it.</p>
+<div class="row"><span>Daily bleed while vacant (at ask)</span><b id="dailyBleed">—</b></div>
+<div class="row"><span>Sunk burn already (not in verdict)</span><b id="sunkOut">—</b></div>
+</div>
+</div>
+<div class="card hero" style="margin-top:16px"><div class="seal" id="seal">—</div><div class="big" id="headline">—</div><p id="verdictText" class="sub" style="margin-top:8px"></p>
+<div class="bar" id="bar"></div><p class="small" id="barLegend"></p></div>
+<div class="grid" style="margin-top:16px">
+<div class="card"><h2>The Honest Ledger</h2><div id="ledger"></div></div>
+<div class="card"><h2>Solvers</h2><div id="solvers"></div>
+<h2 style="margin-top:18px">Days-saved sensitivity</h2><table><thead><tr><th>Days saved by cutting</th><th>Net advantage of cutting</th></tr></thead><tbody id="sensDays"></tbody></table>
+<h2 style="margin-top:18px">Cut-size sensitivity</h2><table><thead><tr><th>Cut ($/mo)</th><th>Net advantage</th></tr></thead><tbody id="sensCut"></tbody></table>
+</div>
+</div>
+<div class="card" style="margin-top:16px"><h2>Save &amp; Share</h2>
+<label>Case name</label><input id="caseName" value="My vacancy check">
+<div style="display:flex;gap:8px;flex-wrap:wrap;margin:12px 0"><button class="gold" id="saveBtn">Save case</button><button id="copyBtn">Copy summary</button></div>
+<div id="saved" class="small"></div><textarea id="summary" readonly></textarea>
+<p class="small">Estimates only — not financial or legal advice. Fill forecasts are your judgement, not a guarantee; local vacancy, seasonality, and screening standards control the real outcome. Never cut screening standards to buy days — a bad placement costs more than a vacancy.</p></div>
+</div>
+<script>
+const $=id=>document.getElementById(id); const fmt=n=>"$"+Math.round(n).toLocaleString(); const DPM=30.44;
+const presets={
+ "Bleeding Single-Family":{ask:3350,cutRent:3150,term:12,daysGone:45,vacantExtra:280,daysAtAsk:35,daysAtCut:10,feeAskPct:0,feeCutPct:0,relist:0},
+ "Standard Apartment":{ask:1850,cutRent:1750,term:12,daysGone:18,vacantExtra:140,daysAtAsk:24,daysAtCut:9,feeAskPct:0,feeCutPct:0,relist:75},
+ "Student Room (by-the-room)":{ask:850,cutRent:795,term:10,daysGone:12,vacantExtra:60,daysAtAsk:28,daysAtCut:7,feeAskPct:0,feeCutPct:0,relist:0},
+ "Winter Slow Listing":{ask:2200,cutRent:1995,term:12,daysGone:60,vacantExtra:220,daysAtAsk:55,daysAtCut:22,feeAskPct:8,feeCutPct:8,relist:150}
+};
+Object.keys(presets).forEach(k=>{let b=document.createElement("button");b.textContent=k;b.onclick=()=>{Object.entries(presets[k]).forEach(([id,v])=>{$(id).value=v});calc()};$("presets").appendChild(b)});
+function netAdv(ask,cutRent,term,daysAtAsk,daysAtCut,vacantExtra,feeAskPct,feeCutPct,relist){
+ let daysSaved=Math.max(0,daysAtAsk-daysAtCut);
+ let earlyRent=daysSaved/DPM*cutRent;
+ let earlyExtra=daysSaved/DPM*vacantExtra;
+ let cutCost=Math.max(0,ask-cutRent)*term;
+ let feeAsk=ask*12*(feeAskPct/100), feeCut=cutRent*12*(feeCutPct/100);
+ let feeDiff=feeCut-feeAsk;
+ return {daysSaved,earlyRent,earlyExtra,cutCost,feeDiff,net:earlyRent+earlyExtra-cutCost-feeDiff-relist};
+}
+function calc(){
+ let ask=+$("ask").value||0,cutRent=+$("cutRent").value||0,term=Math.max(1,+$("term").value||12),daysGone=+$("daysGone").value||0,vacantExtra=+$("vacantExtra").value||0;
+ let daysAtAsk=+$("daysAtAsk").value||0,daysAtCut=+$("daysAtCut").value||0,feeAskPct=+$("feeAskPct").value||0,feeCutPct=+$("feeCutPct").value||0,relist=+$("relist").value||0;
+ let r=netAdv(ask,cutRent,term,daysAtAsk,daysAtCut,vacantExtra,feeAskPct,feeCutPct,relist);
+ let dailyBleed=ask/DPM+vacantExtra/DPM;
+ let sunk=daysGone*dailyBleed;
+ // Solvers
+ // Break-even days saved: net=0 => days/DPM*(cutRent+vacantExtra)=cutCost+feeDiff+relist
+ let denom=Math.max(1,cutRent+vacantExtra);
+ let beDays=(r.cutCost+r.feeDiff+relist)*DPM/denom;
+ // Break-even cut: solve numerically for cutRent where net=0, holding days saved fixed
+ let beCut=null;
+ for(let c=ask;c>=Math.max(0,ask-2000);c-=5){let t=netAdv(ask,c,term,daysAtAsk,daysAtCut,vacantExtra,feeAskPct,feeCutPct,relist); if(t.net>=0) beCut=c; else break;}
+ // Days value
+ let seal,head,text;
+ if(cutRent>=ask){seal="HOLD THE LINE";head="No cut entered — there is nothing to judge yet";text="Lower the proposed rent below the ask, or admit you are holding. Holding is a legitimate strategy when the forecast days are short.";}
+ else if(r.daysSaved<=0){seal="HOLD THE LINE";head="The cut buys <b>zero days</b> — it is a donation, not a strategy";text="Your own forecast says the cut fills no faster. Fix the photos, the showing access, and the listing copy first. Price is the last lever, not the first.";}
+ else if(r.net>=500){seal="CUT IT";head="Cutting pays <b>"+fmt(r.net)+"</b> over the lease";text="The days saved are worth more than the rent surrendered. Cut once to "+fmt(cutRent)+", relaunch clean with new photos, and stop paying the daily bleed while you defend a number the market already answered.";}
+ else if(r.net<=-500){seal="HOLD THE LINE";head="Holding pays <b>"+fmt(-r.net)+"</b> over the lease";text="The cut surrenders "+fmt(r.cutCost)+" across the term to save only "+r.daysSaved+" days. Hold the ask, spend on presentation and showings instead, and revisit if the forecast stretches past "+Math.ceil(beDays)+" days saved.";}
+ else {seal="CLOSE CALL";head="Within <b>"+fmt(Math.abs(r.net))+"</b> either way — judgement, not math, decides";text="The spreadsheet is tied. Cut if your cash reserve is thin or the season is turning against you; hold if you can carry the bleed and the applicant pool at the ask is real.";}
+ $("seal").textContent=seal; $("headline").innerHTML=head; $("verdictText").textContent=text;
+ $("dailyBleed").textContent=fmt(dailyBleed)+"/day"; $("sunkOut").textContent=fmt(sunk)+" over "+daysGone+" days";
+ $("ledger").innerHTML=[["Rent gained by filling "+r.daysSaved+" days sooner",fmt(r.earlyRent)],["Vacant-only costs avoided",fmt(r.earlyExtra)],["Rent surrendered over "+term+" months", "-"+fmt(r.cutCost)],["Leasing-fee difference (cut − ask)","-"+fmt(r.feeDiff)],["Re-list cost","-"+fmt(relist)],["NET advantage of cutting",fmt(r.net)],["Total collected — hold path (term, after fill)",fmt(ask*term)],["Total collected — cut path (term, after fill)",fmt(cutRent*term)]].map(x=>`<div class="row"><span>${x[0]}</span><b>${x[1]}</b></div>`).join("");
+ $("solvers").innerHTML=[["Break-even days the cut must save",beDays.toFixed(1)+" days"],["Your forecast days saved",r.daysSaved+" days"],["Deepest cut that still pays (at forecast days)",beCut!==null?fmt(beCut)+"/mo":"None in $2,000 range — even $0 cut math fails on fees/relist"],["Value of one day saved",fmt(denom/DPM)+"/day"],["Cost of one week at the ask (bleed)",fmt(dailyBleed*7)]].map(x=>`<div class="row"><span>${x[0]}</span><b>${x[1]}</b></div>`).join("");
+ let tot=Math.max(1,r.earlyRent+r.earlyExtra+r.cutCost); let p1=(r.earlyRent+r.earlyExtra)/tot*100;
+ $("bar").innerHTML=`<i style="width:${p1}%;background:#C9973F"></i><i style="width:${100-p1}%;background:#8E2432"></i>`; $("barLegend").textContent=`Gold: value of filling sooner ${fmt(r.earlyRent+r.earlyExtra)} · Port: rent surrendered ${fmt(r.cutCost)}`;
+ $("sensDays").innerHTML=[0,7,14,21,30,45,60].map(d=>{let t=netAdv(ask,cutRent,term,daysAtCut+d,daysAtCut,vacantExtra,feeAskPct,feeCutPct,relist);return `<tr class="${d===r.daysSaved?'hl':''}"><td>${d} days</td><td>${fmt(t.net)}</td></tr>`}).join("");
+ $("sensCut").innerHTML=[0,50,100,150,200,300].map(c=>{let cr=Math.max(0,ask-c);let t=netAdv(ask,cr,term,daysAtAsk,daysAtCut,vacantExtra,feeAskPct,feeCutPct,relist);return `<tr class="${ask-cutRent===c?'hl':''}"><td>${fmt(c)}/mo (to ${fmt(cr)})</td><td>${fmt(t.net)}</td></tr>`}).join("");
+ $("summary").value=`The Vacancy Verdict — ${seal}\nAsk ${fmt(ask)}/mo vs cut ${fmt(cutRent)}/mo over ${term} mo. Forecast ${daysAtAsk} days at ask vs ${daysAtCut} at cut (${r.daysSaved} saved). Net advantage of cutting ${fmt(r.net)}. Break-even ${beDays.toFixed(1)} days saved. Daily bleed ${fmt(dailyBleed)}, sunk burn ${fmt(sunk)} (excluded from verdict).`;
+ renderSaved();
+}
+function renderSaved(){let arr=JSON.parse(localStorage.getItem("vacancy-verdict")||"[]"); $("saved").innerHTML=arr.map((x,i)=>`${x.name}: ${x.seal} <button onclick="delSaved(${i})">×</button>`).join("<br>")||"No saved cases yet."}
+window.delSaved=i=>{let a=JSON.parse(localStorage.getItem("vacancy-verdict")||"[]");a.splice(i,1);localStorage.setItem("vacancy-verdict",JSON.stringify(a));renderSaved()};
+$("saveBtn").onclick=()=>{let a=JSON.parse(localStorage.getItem("vacancy-verdict")||"[]");a.push({name:$("caseName").value,seal:$("seal").textContent});localStorage.setItem("vacancy-verdict",JSON.stringify(a));renderSaved()};
+$("copyBtn").onclick=()=>{$("summary").select();document.execCommand("copy")};
+document.querySelectorAll("input,select").forEach(e=>e.addEventListener("input",calc)); calc();
+if("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js");
+</script></body></html>
